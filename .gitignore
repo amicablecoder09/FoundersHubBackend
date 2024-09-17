@@ -1,0 +1,43 @@
+# Python files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+__pycache__/
+media/
+staticfiles/
+.env
+
+# If you're using PostgreSQL
+*.pgdata
+*.psql
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
