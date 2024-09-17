@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost:8000', 'https://foundershub-backend-webapp-cya8bgevbtfeekey.southindia-01.azurewebsites.net']
 
 
 # Application definition
