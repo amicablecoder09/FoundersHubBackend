@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost:8000', 'https://fou
 # Application definition
 
 INSTALLED_APPS = [
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
