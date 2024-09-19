@@ -1,100 +1,141 @@
 from django.db import models
 
+# Startup Details Table
 class StartupDetails(models.Model):
-    startup_name = models.CharField(max_length=255, unique=True)  # unique to ensure no duplicate startup names
-    idea_description = models.TextField()
-    business_domain = models.CharField(max_length=255)
-    product_type = models.CharField(max_length=255)
-
+    STARTUP_STAGE_CHOICES = [
+        ('Idea', 'Idea'),
+        ('MVP', 'MVP'),
+        ('Growth', 'Growth'),
+        ('Scaling', 'Scaling')
+    ]
+    
+    FUNDING_STATUS_CHOICES = [
+        ('Bootstrapped', 'Bootstrapped'),
+        ('Seed', 'Seed'),
+        ('Series A', 'Series A'),
+        ('Series B', 'Series B'),
+        ('Series C', 'Series C')
+    ]
+    
+    startup_name = models.CharField(max_length=100)
+    founder_name = models.CharField(max_length=100)
+    contact_email = models.EmailField()
+    startup_stage = models.CharField(max_length=50, choices=STARTUP_STAGE_CHOICES)
+    funding_status = models.CharField(max_length=50, choices=FUNDING_STATUS_CHOICES)
+    number_of_employees = models.IntegerField()
+    
     def __str__(self):
         return self.startup_name
 
-
-class NonFunctionalRequirements(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Non-Functional Requirement for {self.startup.startup_name}"
-
-
+# Functional Requirements Table
 class FunctionalRequirements(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    business_domain = models.CharField(max_length=255)
-    application_features = models.JSONField()  # stores array of features
-    data_management = models.JSONField()       # stores array of data management requirements
-
+    BUSINESS_DOMAIN_CHOICES = [
+        ('E-commerce', 'E-commerce'),
+        ('FinTech', 'FinTech'),
+        ('HealthTech', 'HealthTech'),
+        ('EdTech', 'EdTech'),
+        ('Social Media', 'Social Media')
+    ]
+    
+    APPLICATION_FEATURE_CHOICES = [
+        ('User Authentication', 'User Authentication'),
+        ('Payment Processing', 'Payment Processing'),
+        ('Product Catalog', 'Product Catalog'),
+        ('Social Media Integration', 'Social Media Integration'),
+        ('Analytics', 'Analytics')
+    ]
+    
+    USER_INTERFACE_CHOICES = [
+        ('Home Page', 'Home Page'),
+        ('Product Page', 'Product Page'),
+        ('Checkout Page', 'Checkout Page'),
+        ('Profile Page', 'Profile Page'),
+        ('Dashboard', 'Dashboard')
+    ]
+    
+    DATA_MANAGEMENT_CHOICES = [
+        ('User Data', 'User Data'),
+        ('Transaction Data', 'Transaction Data'),
+        ('Product Data', 'Product Data'),
+        ('Analytics Data', 'Analytics Data'),
+        ('Logs', 'Logs')
+    ]
+    
+    CLOUD_PROVIDER_CHOICES = [
+        ('AWS', 'AWS'),
+        ('Azure', 'Azure'),
+        ('GCP', 'GCP')
+    ]
+    
+    DEPLOYMENT_MODEL_CHOICES = [
+        ('Single Region', 'Single Region'),
+        ('Multi-Region', 'Multi-Region')
+    ]
+    
+    startup = models.OneToOneField(StartupDetails, on_delete=models.CASCADE, related_name='functional_requirements')
+    business_domain = models.CharField(max_length=50, choices=BUSINESS_DOMAIN_CHOICES)
+    application_features = models.JSONField()
+    user_interface = models.JSONField()
+    data_management = models.JSONField()
+    expected_number_of_users = models.IntegerField()
+    expected_number_of_transactions = models.IntegerField()
+    cloud_provider = models.CharField(max_length=50, choices=CLOUD_PROVIDER_CHOICES)
+    deployment_model = models.CharField(max_length=50, choices=DEPLOYMENT_MODEL_CHOICES)
+    
     def __str__(self):
         return f"Functional Requirements for {self.startup.startup_name}"
 
-
-class Scalability(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    expected_number_of_users = models.IntegerField()
-    expected_number_of_transactions_per_second = models.IntegerField()
-
+# Non-Functional Requirements Table
+class NonFunctionalRequirements(models.Model):
+    AUTHENTICATION_CHOICES = [
+        ('OAuth', 'OAuth'),
+        ('JWT', 'JWT'),
+        ('Basic Auth', 'Basic Auth')
+    ]
+    
+    AUTHORIZATION_CHOICES = [
+        ('Role-Based Access Control', 'Role-Based Access Control'),
+        ('Attribute-Based Access Control', 'Attribute-Based Access Control')
+    ]
+    
+    BACKUP_CHOICES = [
+        ('Daily', 'Daily'),
+        ('Weekly', 'Weekly'),
+        ('Monthly', 'Monthly')
+    ]
+    
+    RECOVERY_CHOICES = [
+        ('Automated', 'Automated'),
+        ('Manual', 'Manual')
+    ]
+    
+    MONITORING_CHOICES = [
+        ('Enabled', 'Enabled'),
+        ('Disabled', 'Disabled')
+    ]
+    
+    COST_ESTIMATION_CHOICES = [
+        ('Accurate', 'Accurate'),
+        ('Approximate', 'Approximate')
+    ]
+    
+    LICENSING_CHOICES = [
+        ('Open Source', 'Open Source'),
+        ('Commercial', 'Commercial')
+    ]
+    
+    startup = models.OneToOneField(StartupDetails, on_delete=models.CASCADE, related_name='nonfunctional_requirements')
+    response_time = models.IntegerField(help_text="Response Time in milliseconds")
+    throughput = models.IntegerField(help_text="Throughput in requests per second")
+    authentication = models.CharField(max_length=50, choices=AUTHENTICATION_CHOICES)
+    authorization = models.CharField(max_length=50, choices=AUTHORIZATION_CHOICES)
+    uptime = models.FloatField(help_text="Uptime requirement in percentage")
+    backup = models.CharField(max_length=50, choices=BACKUP_CHOICES)
+    recovery = models.CharField(max_length=50, choices=RECOVERY_CHOICES)
+    monitoring = models.CharField(max_length=50, choices=MONITORING_CHOICES)
+    budget = models.FloatField(help_text="Budget per month in USD")
+    cost_estimation = models.CharField(max_length=50, choices=COST_ESTIMATION_CHOICES)
+    licensing = models.CharField(max_length=50, choices=LICENSING_CHOICES)
+    
     def __str__(self):
-        return f"Scalability for {self.startup.startup_name}"
-
-
-class Deployment(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    cloud_provider = models.CharField(max_length=255)
-    deployment_model = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"Deployment for {self.startup.startup_name}"
-
-
-class Performance(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    response_time = models.CharField(max_length=255)
-    throughput = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"Performance for {self.startup.startup_name}"
-
-
-class Security(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    authentication = models.TextField()
-    authorization = models.TextField()
-
-    def __str__(self):
-        return f"Security for {self.startup.startup_name}"
-
-
-class Reliability(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    uptime = models.CharField(max_length=255)
-    backup = models.CharField(max_length=255)
-    recovery = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"Reliability for {self.startup.startup_name}"
-
-
-class Maintainability(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    code_quality = models.TextField()
-    documentation = models.TextField()
-    monitoring = models.TextField()
-
-    def __str__(self):
-        return f"Maintainability for {self.startup.startup_name}"
-
-
-class Cost(models.Model):
-    startup = models.ForeignKey(StartupDetails, on_delete=models.CASCADE)
-    non_functional_req = models.ForeignKey(NonFunctionalRequirements, on_delete=models.CASCADE)
-    budget = models.CharField(max_length=255)
-    cost_estimation = models.TextField()
-    licensing = models.TextField()
-
-    def __str__(self):
-        return f"Cost for {self.startup.startup_name}"
+        return f"Non-Functional Requirements for {self.startup.startup_name}"
