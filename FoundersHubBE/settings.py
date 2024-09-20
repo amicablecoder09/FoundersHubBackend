@@ -27,6 +27,11 @@ SECRET_KEY = 'django-insecure-r4*1t2m=wga*2*mf4%jo+r+%^dtcge1i&@=l4a-q_-3q1)0nza
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:3000',
+    'http://localhost:3000'
+)
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://founders-hub-frontend-webapp-dtbehjagepecccha.southindia-01.azurewebsites.net/', 'http://localhost:3000', 'http://localhost:8000', 'https://foundershub-backend-webapp-cya8bgevbtfeekey.southindia-01.azurewebsites.net']
 
